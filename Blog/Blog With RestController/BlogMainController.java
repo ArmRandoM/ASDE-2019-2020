@@ -3,14 +3,15 @@ package it.unical.demacs.asd2019.Blog.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.unical.demacs.asd2019.Blog.Model.BlogPost;
 import it.unical.demacs.asd2019.Blog.Services.LoginService;
 
 /*In this class i want to create my first CONTROLLER
- *In order to create a RestController we annotate the class with @Controller then we remove
- *@ResponseBody
+ *In order to create a RestController we annotate the class with @RestController
  */
 @RestController
 public class BlogMainController 
@@ -25,7 +26,6 @@ public class BlogMainController
 	 *   	1) we specified / in order to define a method that can be executed in the root of the application;
 	 *   	2) the @RequestMapping returns the name of the view that is responsible to rendering the result but 
 	 *		we use it as a web service and for rendering we will use something different;
-	 *   2. for now we want to return a string as a body of the message, in order to do this we add @ResponseBody to the Method*
 	 *   Try with: http://localhost:8080/ 
 	 */
 	
@@ -34,7 +34,7 @@ public class BlogMainController
 	{
 		return "<h1> Welcome to the blog </h1>";
 	}
-	/* Now we focused on the dependency injection, indeed the controller will delegate the control of the login credenital
+	/* Now we focused on the dependency injection, indeed the controller will delegate the control of the login credentials
 	 * to the LoginService.
 	 */
 	/* In the case in which we want to handle the request going to /login of the application we have to add some additional mappings.
@@ -56,5 +56,11 @@ public class BlogMainController
 	public String loginManager(@RequestParam("username") String username, @RequestParam("password") String password)
 	{
 		return (loginService.canLogin(username, password))? "<h1 style=\"color:green\">Success</h1>" : "<h1 style=\"color:red\">Fail</h1>";
+	}
+	
+	@RequestMapping(value = "/home" , method = RequestMethod.GET)
+	public BlogPost getPost()
+	{
+		return loginService.getLatestPost();
 	}
 }
